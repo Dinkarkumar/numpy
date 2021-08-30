@@ -2621,7 +2621,15 @@ class TestIsclose:
         assert np.allclose(a, a, atol=0, equal_nan=True)
         assert np.allclose(a, a, atol=np.timedelta64(1, "ns"), equal_nan=True)
 
-
+    def test_datetime64(self):
+        # Allclose works for datetime64[ns] as long as 'atol' is
+        # an integer or also a datetime64[ns] 
+        a = np.array([[1, 2, 3, "NaT"]], dtype="datetime64[ns]")
+        assert np.isclose(a, a, atol=0, equal_nan=True).all()
+        assert np.isclose(a, a, atol=np.datetime64(1, "ns"), equal_nan=True).all()
+        assert np.allclose(a, a, atol=0, equal_nan=True)
+        assert np.allclose(a, a, atol=np.datetime64(1, "ns"), equal_nan=True)
+        
 class TestStdVar:
     def setup(self):
         self.A = np.array([1, -1, 1, -1])
